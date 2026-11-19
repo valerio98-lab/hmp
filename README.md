@@ -1,18 +1,49 @@
-# Learning Reusable Hybrid Motion Priors for Humanoid Locomotion from Motion Imitation
+<div align="center">
 
-Code for the paper *Learning Reusable Hybrid Motion Priors for Humanoid
-Locomotion from Motion Imitation* (arXiv:2607.24083). Project page:
-<https://hucebot.github.io/hmp-project/>.
+# 🤖 HMP — Hybrid Motion Priors for Humanoid Locomotion
 
-<p align="center">
-  <img src="assets/gifs/tracking.gif" alt="Velocity tracking" width="24%">
-  <img src="assets/gifs/nav.gif" alt="Point-goal navigation" width="24%">
-  <img src="assets/gifs/fall.gif" alt="Fall-recovery velocity tracking" width="24%">
-  <img src="assets/gifs/deploy.gif" alt="Deployment on the Unitree G1" width="24%">
-</p>
+**Learning Reusable Hybrid Motion Priors for Humanoid Locomotion from Motion Imitation**
 
-The pipeline turns motion-imitation skills into a reusable **hybrid motion
-prior (HMP)** for the Unitree G1, in three stages:
+Valerio Belli<sup>1,2</sup>, Valerio Modugno<sup>2</sup>, Enrico Mingo Hoffman<sup>3</sup>, Fabio Amadio<sup>3</sup>
+
+<sup>1</sup>Sapienza University of Rome &nbsp; <sup>2</sup>University College London &nbsp; <sup>3</sup>Inria, Université de Lorraine, CNRS
+
+[![arXiv](https://img.shields.io/badge/arXiv-2607.24083-b31b1b.svg)](https://arxiv.org/abs/2607.24083)
+[![Project page](https://img.shields.io/badge/Project-Page-2ea44f.svg)](https://hucebot.github.io/hmp-project/)
+[![Video](https://img.shields.io/badge/Video-YouTube-red.svg)](https://youtu.be/Af9qPkuPM3w)
+[![mjlab](https://img.shields.io/badge/mjlab-1.2.0-orange.svg)](https://github.com/mujocolab/mjlab)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
+<img src="assets/gifs/tracking.gif" alt="Velocity tracking" width="24%">
+<img src="assets/gifs/nav.gif" alt="Point-goal navigation" width="24%">
+<img src="assets/gifs/fall.gif" alt="Fall-recovery velocity tracking" width="24%">
+<img src="assets/gifs/deploy.gif" alt="Deployment on the Unitree G1" width="24%">
+
+*Velocity tracking · Point-goal navigation · Fall recovery · Real Unitree G1*
+
+</div>
+
+**HMP** turns motion-imitation skills into a **reusable hybrid motion prior**
+for humanoid locomotion: new task policies are trained just by selecting
+entries of a frozen motion codebook, without relearning balance, stepping or
+whole-body coordination.
+
+---
+
+## 🧠 What is HMP?
+
+- **Learn skills once, from human motion.** A motion-imitation expert tracks
+  retargeted LaFAN clips (walking, running, jumping, falling and getting up).
+- **Distill them into a hybrid prior.** The expert is distilled into a
+  continuous proprioceptive latent plus a discrete residual-VQ codebook
+  (8 stages × 1024 codes, trained with the rotation trick) and an action
+  decoder.
+- **Reuse the prior for new tasks.** With the HMP frozen, task policies are
+  trained with PPO to pick codebook entries: the same prior solves velocity
+  tracking, point-goal navigation and fall-recovery velocity tracking.
+- **Interpretable and deployable.** Early RVQ stages encode standing and slow
+  walking, deeper stages unlock running; the velocity-tracking policy
+  transfers zero-shot to the real Unitree G1.
 
 | Phase | Task ID | What is trained |
 |---|---|---|
@@ -24,7 +55,9 @@ prior (HMP)** for the Unitree G1, in three stages:
 
 Training is built on [`mjlab`](https://github.com/mujocolab/mjlab) 1.2.0.
 
-## Installation
+---
+
+## 📦 Installation
 
 Install [`uv`](https://docs.astral.sh/uv/), then:
 
@@ -33,7 +66,7 @@ uv sync
 uv run list_envs | grep HMP
 ```
 
-## Motion data
+## 🎞️ Motion data
 
 The expert learns from LaFAN motion-capture clips retargeted to the G1
 ([LAFAN-G1](https://huggingface.co/datasets/ember-lab-berkeley/LAFAN-G1)). The
@@ -53,7 +86,7 @@ up, and the fall-recovery task starts part of its episodes from their poses.
 The motion folder used by Phases I and II is set in
 [`src/hmp/config/g1/motion_data_cfg.yaml`](src/hmp/config/g1/motion_data_cfg.yaml).
 
-## Training
+## 🏋️ Training
 
 Each stage consumes the checkpoint of the previous one. Commands use the
 paper settings (8192 envs for Phases I-II, 4096 for Phase III).
@@ -85,7 +118,7 @@ Useful options:
 - `--agent.imitation-wandb-run-path entity/project/run_id` resolves the HMP
   checkpoint from W&B instead of a local file.
 
-## Play
+## ▶️ Play
 
 ```bash
 uv run hmp-play Mjlab-HMP-Locomotion-Unitree-G1 \
@@ -101,14 +134,18 @@ selection followed by the frozen HMP). To export an existing checkpoint:
 uv run python -m hmp.scripts.deploy.export_checkpoint_to_onnx --help
 ```
 
-## Development
+## 🛠️ Development
 
 ```bash
 uv sync --group dev
 make format
 ```
 
-## Citation
+---
+
+## 📝 Citation
+
+If you find this work useful, please cite:
 
 ```bibtex
 @article{belli2026hmp,
