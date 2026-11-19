@@ -1,0 +1,22 @@
+# Python / tooling
+.venv/
+__pycache__/
+*.pyc
+.ruff_cache/
+.pytest_cache/
+
+# Training outputs
+logs/
+outputs/
+wandb/
+videos/
+*.onnx
+
+# Motion data (download separately, see assets/motions/README.md)
+assets/motions/**/*.npz
+
+# Local smoke tests (not part of the release)
+smoke_tests/
+
+# Local archives (e.g. the original full-resolution GIFs)
+*.zip
